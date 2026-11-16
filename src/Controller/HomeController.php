@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use G\Router\Attribute\Route;
 use G\Router\RouterInterface;
 
 /**
  * No parent class: dependencies come through the constructor, route parameters by name.
+ * Routes are declared with the Route attribute; add #[Group('/prefix', name: 'prefix.')]
+ * on the class to put them all under a common path and name prefix.
  */
 final class HomeController
 {
@@ -18,6 +21,7 @@ final class HomeController
     /**
      * A string is sent as HTML.
      */
+    #[Route('/', name: 'home')]
     public function index(): string
     {
         $hello = htmlspecialchars($this->router->url('hello', ['name' => 'world']), ENT_QUOTES);
@@ -39,6 +43,7 @@ final class HomeController
      *
      * @return array{message: string}
      */
+    #[Route('/hello/{name}', name: 'hello')]
     public function hello(string $name): array
     {
         return ['message' => "Hello {$name}!"];
