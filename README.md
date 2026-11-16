@@ -108,8 +108,8 @@ Optional packages: `error-catcher-middleware`, `trusted-proxy-middleware`,
 
 ## Environment variables
 
-Copy `.env.example` to `.env`. Loading it needs `gadwinn/dotenv`, called at the top of
-`public/index.php`, after the autoloader.
+Copy `.env.example` to `.env`, run `composer require gadwinn/dotenv` and uncomment the
+line that loads it in `public/index.php`: the values are then available in `$_ENV`.
 
 ## Web servers
 
