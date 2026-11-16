@@ -24,7 +24,7 @@ my-app/
 ├── config/
 │   ├── services.php       # what the autowiring cannot guess
 │   ├── middlewares.php    # middleware stack, in order of execution
-│   └── routes.php         # routes (and base path)
+│   └── routes.php         # base path, loading of the controller routes
 ├── src/Controller/        # your controllers (namespace App\)
 ├── tests/
 ├── .env.example
@@ -46,27 +46,32 @@ $router->setBasePath('/my-app/public');
 
 ## Adding a route
 
-```php
-// config/routes.php
-$router->get('/users/{id:i}', [UserController::class, 'show'], ['name' => 'user']);
-```
+Routes are declared on the controllers: every class of `src/Controller` is read, nothing
+to register.
 
 ```php
 // src/Controller/UserController.php
 namespace App\Controller;
 
+use G\Router\Attribute\{Group, Route};
+
+#[Group('/users', name: 'users.')]          // optional: common path and name prefix
 final class UserController
 {
     public function __construct(private readonly UserRepository $users)
     {
     }
 
+    #[Route('/{id:i}', name: 'show')]       // GET /users/{id}, named users.show
     public function show(int $id): array
     {
         return $this->users->find($id);   // an array is sent as JSON, a string as HTML
     }
 }
 ```
+
+`#[Route]` takes `methods: 'POST'` or `methods: ['PUT', 'PATCH']` (default `GET`) and can be
+repeated. Routes can still be mapped by hand in `config/routes.php`.
 
 A controller needs no declaration: the container builds it and injects its constructor
 dependencies. Route parameters are injected by name, the request by type
