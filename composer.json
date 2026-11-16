@@ -1,0 +1,106 @@
+{
+    "name": "gadwinn/skeleton",
+    "description": "Starting project for gadwinn/framework applications.",
+    "type": "project",
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Gadwinn/psr-http-message",
+            "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Gadwinn/psr-http-server-handler",
+            "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Gadwinn/router",
+            "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Gadwinn/psr-container",
+            "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Gadwinn/http-emitter",
+            "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Gadwinn/framework",
+            "no-api": true
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.3",
+        "gadwinn/framework": "dev-develop"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest@dev",
+        "phpstan/phpstan": "*",
+        "phpunit/phpunit": "*",
+        "povils/phpmnd": "*",
+        "squizlabs/php_codesniffer": "*"
+    },
+    "config": {
+        "allow-plugins": {}
+    },
+    "scripts": {
+        "serve": "php -S localhost:8000 -t public",
+        "install-prod": "composer install --no-dev --classmap-authoritative",
+        "test-all": [
+            "@security-audit",
+            "@test-phpcbf",
+            "@test-cs",
+            "@test-stan",
+            "@test-unit",
+            "@test-mnd"
+        ],
+        "security-audit": "composer audit --no-dev --format=summary --abandoned=report",
+        "test-phpcbf": "php vendor/bin/phpcbf || exit 0",
+        "test-cs": "php vendor/bin/phpcs",
+        "test-stan": "php vendor/bin/phpstan",
+        "test-unit": "php vendor/bin/phpunit --no-coverage",
+        "test-unit-coverage": "php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-text",
+        "test-mnd": "php vendor/bin/phpmnd ./src ./config --hint --progress --strings --extensions=assign,operation,return,condition,switch_case"
+    },
+    "scripts-descriptions": {
+        "serve": "Run the application with the PHP built-in server on http://localhost:8000",
+        "install-prod": "Install dependencies for production environment",
+        "test-all": "Run the complete test suite including all quality checks",
+        "security-audit": "Check for security vulnerabilities in dependencies",
+        "test-phpcbf": "Automatically fix code style issues using PHP Code Beautifier and Fixer",
+        "test-cs": "Run code style checks using PHP_CodeSniffer",
+        "test-stan": "Run static analysis using PHPStan",
+        "test-unit": "Run unit tests with PHPUnit",
+        "test-unit-coverage": "Run unit tests with PHPUnit and generate code coverage report",
+        "test-mnd": "Detect magic numbers in the codebase"
+    },
+    "suggest": {
+        "gadwinn/error-catcher-middleware": "Turns uncaught exceptions and PHP errors into error responses",
+        "gadwinn/http-method-middleware": "HTTP method override and body parsing for PUT/PATCH/DELETE",
+        "gadwinn/trusted-proxy-middleware": "Client IP, scheme and host behind a reverse proxy",
+        "gadwinn/csrf": "CSRF protection",
+        "gadwinn/fail-sentry-middleware": "Blocks the IP addresses that keep failing",
+        "gadwinn/dotenv": "Loads the .env files",
+        "gadwinn/psr-log": "PSR-3 logger",
+        "gadwinn/orm": "Database access",
+        "gadwinn/translator": "Translations"
+    }
+}
