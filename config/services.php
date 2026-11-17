@@ -119,15 +119,15 @@ return [
     //     => new G\Jwt\ValueObject\Key($_ENV['JWT_SECRET'], algorithm: G\Jwt\Enum\Algorithm::HS256),
 
     // --- composer require gadwinn/debug -------------------------------------------------------
-    // Development only (see config/middlewares.php). The logger of the application goes through
-    // the LogCollector, and the orm sends its queries to the QueryCollector.
+    // Development only (see config/middlewares.php). The Logs and SQL panels need psr/log
+    // (installed by gadwinn/psr-log or gadwinn/orm): uncomment their line with the entries below.
     // G\Debug\DebugBar::class => static fn (ContainerInterface $c) => new G\Debug\DebugBar(
     //     new G\Debug\Collector\TimeMemoryCollector(),
     //     new G\Debug\Collector\RequestCollector(),
     //     new G\Debug\Collector\RouteCollector(),
-    //     $c->get(G\Debug\Collector\LogCollector::class),
-    //     $c->get(G\Debug\Collector\QueryCollector::class),
     //     $c->get(G\Debug\Collector\DumpCollector::class),   // inject it where you dump values
+    //     // $c->get(G\Debug\Collector\LogCollector::class),     // with gadwinn/psr-log
+    //     // $c->get(G\Debug\Collector\QueryCollector::class),   // with gadwinn/orm
     // ),
     // With gadwinn/psr-log: replace its block above by these two entries
     // G\Debug\Collector\LogCollector::class => static fn () => new G\Debug\Collector\LogCollector(
