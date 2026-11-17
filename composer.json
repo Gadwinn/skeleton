@@ -93,14 +93,21 @@
         "test-mnd": "Detect magic numbers in the codebase"
     },
     "suggest": {
-        "gadwinn/error-catcher-middleware": "Turns uncaught exceptions and PHP errors into error responses",
-        "gadwinn/http-method-middleware": "HTTP method override and body parsing for PUT/PATCH/DELETE",
         "gadwinn/trusted-proxy-middleware": "Client IP, scheme and host behind a reverse proxy",
-        "gadwinn/csrf": "CSRF protection",
+        "gadwinn/error-catcher-middleware": "Turns uncaught exceptions and PHP errors into error responses",
         "gadwinn/fail-sentry-middleware": "Blocks the IP addresses that keep failing",
+        "gadwinn/http-method-middleware": "HTTP method override and body parsing for PUT/PATCH/DELETE",
+        "gadwinn/csrf": "CSRF protection",
         "gadwinn/dotenv": "Loads the .env files",
         "gadwinn/psr-log": "PSR-3 logger",
+        "gadwinn/psr-simple-cache": "PSR-16 cache (memory or files)",
+        "gadwinn/psr-event-dispatcher": "PSR-14 event dispatcher",
+        "gadwinn/psr-clock": "PSR-20 clock",
+        "gadwinn/psr-http-client": "PSR-18 HTTP client (cURL)",
         "gadwinn/orm": "Database access",
-        "gadwinn/translator": "Translations"
+        "gadwinn/translator": "Translations",
+        "gadwinn/validator": "Validation of values and objects",
+        "gadwinn/jwt": "JSON Web Tokens",
+        "gadwinn/debug": "Debug bar for development"
     }
 }

@@ -90,10 +90,19 @@ return [
 ];
 ```
 
-## Adding a middleware
+## Optional packages
 
-Install the package, then add it to `config/middlewares.php` (before the `RouterMiddleware` to
-run before routing). Middlewares needing settings are also declared in `config/services.php`.
+Every optional package (the `suggest` list of `composer.json`) has a commented block, ready to
+enable, in `config/services.php`, and the middlewares are listed in their order of execution
+in `config/middlewares.php`. To enable one: run the `composer require` command written above
+its block, then uncomment the block and, for a middleware, its line.
+
+| Middlewares (in stack order) | Services |
+|---|---|
+| `trusted-proxy-middleware`, `error-catcher-middleware`, `fail-sentry-middleware`, `http-method-middleware`, `csrf` | `dotenv`, `psr-log`, `psr-simple-cache`, `psr-event-dispatcher`, `psr-clock`, `psr-http-client`, `orm`, `translator`, `validator`, `jwt`, `debug` |
+
+All of them are under `gadwinn/`. A middleware without settings only needs its line in
+`config/middlewares.php`, for instance:
 
 ```bash
 composer require gadwinn/http-method-middleware
@@ -107,9 +116,18 @@ return [
 ];
 ```
 
-Optional packages: `error-catcher-middleware`, `trusted-proxy-middleware`,
-`http-method-middleware`, `csrf`, `fail-sentry-middleware`, `dotenv`, `psr-log`, `orm`,
-`translator` (all under `gadwinn/`).
+## Debug bar
+
+**Development only.** `composer require gadwinn/debug`, then uncomment:
+
+- in `config/middlewares.php`: the `$dev` line, `DebugBarMiddleware` (first) and
+  `CaptureRequestMiddleware` (after the router); both are only added when `APP_ENV=dev`;
+- in `config/services.php`: the `DebugBar` block, and the replacements given there for the
+  logger and the orm to get the Logs and SQL panels.
+
+HTML pages then show the bar at the bottom; every response, JSON included, gets a
+`Server-Timing` header visible in the browser's developer tools. Inject
+`G\Debug\Collector\DumpCollector` where you want to inspect a value: `$dumps->dump($value)`.
 
 ## Environment variables
 
