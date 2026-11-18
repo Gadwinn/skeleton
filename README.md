@@ -24,7 +24,8 @@ my-app/
 ├── config/
 │   ├── services.php       # what the autowiring cannot guess
 │   ├── middlewares.php    # middleware stack, in order of execution
-│   └── routes.php         # base path, loading of the controller routes
+│   ├── routes.php         # base path, loading of the controller routes
+│   └── reset.php          # services to reset after each request (worker mode)
 ├── src/Controller/        # your controllers (namespace App\)
 ├── tests/
 ├── .env.example
@@ -185,30 +186,10 @@ example.com {
 }
 ```
 
-In worker mode, the application is built once and serves every request; replace the content
-of `public/index.php` with:
-
-```php
-<?php
-
-declare(strict_types=1);
-
-use G\Framework\ApplicationFactory;
-
-require dirname(__DIR__) . '/vendor/autoload.php';
-
-$app = ApplicationFactory::fromDirectory(dirname(__DIR__));
-
-if (!function_exists('frankenphp_handle_request')) {
-    $app->run();
-    return;
-}
-
-$handler = static fn () => $app->run();
-while (frankenphp_handle_request($handler)) {
-    gc_collect_cycles();
-}
-```
+`public/index.php` is ready for the worker mode: with the configuration below, the application
+is built once and serves every request. Services keeping a state from one request to the next
+(entities loaded by `gadwinn/orm`, locale of `gadwinn/translator`) are reset after each request
+by `config/reset.php`: uncomment their block there when you enable them.
 
 ```caddyfile
 {
