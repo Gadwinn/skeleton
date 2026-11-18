@@ -24,7 +24,7 @@ my-app/
 ├── config/
 │   ├── services.php       # what the autowiring cannot guess
 │   ├── middlewares.php    # middleware stack, in order of execution
-│   └── routes.php         # routes (and base path)
+│   └── routes.php         # base path, loading of the controller routes
 ├── src/Controller/        # your controllers (namespace App\)
 ├── tests/
 ├── .env.example
@@ -46,27 +46,32 @@ $router->setBasePath('/my-app/public');
 
 ## Adding a route
 
-```php
-// config/routes.php
-$router->get('/users/{id:i}', [UserController::class, 'show'], ['name' => 'user']);
-```
+Routes are declared on the controllers: every class of `src/Controller` is read, nothing
+to register.
 
 ```php
 // src/Controller/UserController.php
 namespace App\Controller;
 
+use G\Router\Attribute\{Group, Route};
+
+#[Group('/users', name: 'users.')]          // optional: common path and name prefix
 final class UserController
 {
     public function __construct(private readonly UserRepository $users)
     {
     }
 
+    #[Route('/{id:i}', name: 'show')]       // GET /users/{id}, named users.show
     public function show(int $id): array
     {
         return $this->users->find($id);   // an array is sent as JSON, a string as HTML
     }
 }
 ```
+
+`#[Route]` takes `methods: 'POST'` or `methods: ['PUT', 'PATCH']` (default `GET`) and can be
+repeated. Routes can still be mapped by hand in `config/routes.php`.
 
 A controller needs no declaration: the container builds it and injects its constructor
 dependencies. Route parameters are injected by name, the request by type
@@ -85,10 +90,19 @@ return [
 ];
 ```
 
-## Adding a middleware
+## Optional packages
 
-Install the package, then add it to `config/middlewares.php` (before the `RouterMiddleware` to
-run before routing). Middlewares needing settings are also declared in `config/services.php`.
+Every optional package (the `suggest` list of `composer.json`) has a commented block, ready to
+enable, in `config/services.php`, and the middlewares are listed in their order of execution
+in `config/middlewares.php`. To enable one: run the `composer require` command written above
+its block, then uncomment the block and, for a middleware, its line.
+
+| Middlewares (in stack order) | Services |
+|---|---|
+| `trusted-proxy-middleware`, `error-catcher-middleware`, `fail-sentry-middleware`, `http-method-middleware`, `csrf` | `dotenv`, `psr-log`, `psr-simple-cache`, `psr-event-dispatcher`, `psr-clock`, `psr-http-client`, `orm`, `translator`, `validator`, `jwt`, `debug` |
+
+All of them are under `gadwinn/`. A middleware without settings only needs its line in
+`config/middlewares.php`, for instance:
 
 ```bash
 composer require gadwinn/http-method-middleware
@@ -102,14 +116,23 @@ return [
 ];
 ```
 
-Optional packages: `error-catcher-middleware`, `trusted-proxy-middleware`,
-`http-method-middleware`, `csrf`, `fail-sentry-middleware`, `dotenv`, `psr-log`, `orm`,
-`translator` (all under `gadwinn/`).
+## Debug bar
+
+**Development only.** `composer require gadwinn/debug`, then uncomment:
+
+- in `config/middlewares.php`: the `$dev` line, `DebugBarMiddleware` (first) and
+  `CaptureRequestMiddleware` (after the router); both are only added when `APP_ENV=dev`;
+- in `config/services.php`: the `DebugBar` block, and the replacements given there for the
+  logger and the orm to get the Logs and SQL panels.
+
+HTML pages then show the bar at the bottom; every response, JSON included, gets a
+`Server-Timing` header visible in the browser's developer tools. Inject
+`G\Debug\Collector\DumpCollector` where you want to inspect a value: `$dumps->dump($value)`.
 
 ## Environment variables
 
-Copy `.env.example` to `.env`. Loading it needs `gadwinn/dotenv`, called at the top of
-`public/index.php`, after the autoloader.
+Copy `.env.example` to `.env`, run `composer require gadwinn/dotenv` and uncomment the
+line that loads it in `public/index.php`: the values are then available in `$_ENV`.
 
 ## Web servers
 
@@ -203,12 +226,6 @@ real client IP, scheme and host.
 ```bash
 composer test-all       # security audit, code style, static analysis, unit tests, magic numbers
 ```
-
-## Note
-
-Until the `gadwinn/*` packages are tagged and published on Packagist, `composer.json` reads
-them from GitHub (`vcs` repositories, `dev-develop` branches) with `minimum-stability: dev`
-and `prefer-stable: true`.
 
 ## License
 
