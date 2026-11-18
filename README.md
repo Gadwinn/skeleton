@@ -227,12 +227,6 @@ real client IP, scheme and host.
 composer test-all       # security audit, code style, static analysis, unit tests, magic numbers
 ```
 
-## Note
-
-Until the `gadwinn/*` packages are tagged and published on Packagist, `composer.json` reads
-them from GitHub (`vcs` repositories, `dev-develop` branches) with `minimum-stability: dev`
-and `prefer-stable: true`.
-
 ## License
 
 MIT
