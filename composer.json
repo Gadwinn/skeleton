@@ -2,41 +2,7 @@
     "name": "gadwinn/skeleton",
     "description": "Starting project for gadwinn/framework applications.",
     "type": "project",
-    "minimum-stability": "dev",
     "license": "MIT",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Gadwinn/psr-http-message",
-            "no-api": true
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/Gadwinn/psr-http-server-handler",
-            "no-api": true
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/Gadwinn/router",
-            "no-api": true
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/Gadwinn/psr-container",
-            "no-api": true
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/Gadwinn/http-emitter",
-            "no-api": true
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/Gadwinn/framework",
-            "no-api": true
-        }
-    ],
     "autoload": {
         "psr-4": {
             "App\\": "src/"
@@ -49,7 +15,7 @@
     },
     "require": {
         "php": ">=8.3",
-        "gadwinn/framework": "dev-develop"
+        "gadwinn/framework": "^0.1"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest@dev",
